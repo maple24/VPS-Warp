@@ -81,41 +81,7 @@ location: /etc/v2ray/config.json
     "loglevel": "info"
   },
   // v2ray general settings, generated automatically by V2ray
-  "inbounds": [
-    {
-      "port": 19157,
-      "protocol": "vmess",
-      "settings": {
-        "clients": [
-          {
-            "id": "9749e4ec-91d6-486c-b81f-b3f6560c84a1",
-            "alterId": 0
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "kcp",
-        "security": "none",
-        "tlsSettings": {},
-        "tcpSettings": {},
-        "httpSettings": {},
-        "kcpSettings": {
-          "mtu": 1350,
-          "tti": 50,
-          "uplinkCapacity": 100,
-          "downlinkCapacity": 100,
-          "congestion": false,
-          "readBufferSize": 2,
-          "writeBufferSize": 2,
-          "header": {
-            "type": "wechat-video"
-          }
-        },
-        "wsSettings": {},
-        "quicSettings": {}
-      }
-    }
-  ],
+  "inbounds": [],
   // outbonds rules
   "outbounds": [
     {
