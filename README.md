@@ -42,7 +42,7 @@ bash warp.sh wg6
 source <(curl -sL https://multi.netlify.app/v2ray.sh) --zh
 ```
 
-### Speed Booster
+### Speed Booster (not necessary)
 
 1. install
 
