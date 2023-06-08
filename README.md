@@ -1,21 +1,40 @@
-# VPS-V2ray-Warp
+- [1. Introduction](#1-introduction)
+- [2. VPS](#2-vps)
+- [3. Cloudflare Warp](#3-cloudflare-warp)
+  - [3.1. Install](#31-install)
+  - [3.2. Usage](#32-usage)
+- [4. V2ray](#4-v2ray)
+  - [4.1. Install](#41-install)
+  - [4.2. Speed Booster (not necessary)](#42-speed-booster-not-necessary)
+  - [4.3. Usage](#43-usage)
+  - [4.4. Config](#44-config)
+- [5. subscription](#5-subscription)
+  - [5.1. create web server on VPS](#51-create-web-server-on-vps)
+    - [5.1.1. install](#511-install)
+    - [5.1.2. config](#512-config)
+    - [5.1.3. check syntax and restart nginx](#513-check-syntax-and-restart-nginx)
+  - [5.2. export config from V2ray](#52-export-config-from-v2ray)
+  - [5.3. subscription url](#53-subscription-url)
+- [6. Note](#6-note)
+# 1. Introduction
 
 [Reference](https://github.com/Alvin9999/new-pac)
 
 Guide to build a proxy server with VPS and Cloudfare warp.
 
-A VPS is the core of a proxy server. For most cases (eg. Youtube), VPS is enough to cross over GFW. Websites like ChatGPT and Netflix will block famous ISP, in which case raw IP is needed. That's why warp is used here and Cloudfare is a free one and easy to deploy thanks to out-of-box shell scripts.
+A VPS is the core of a proxy server. For most cases (eg. Youtube), VPS is enough to cross over GFW. Websites like ChatGPT and Netflix will block famous ISP, in which case raw IP is needed. That's why warp is used here and Cloudfare is a free one and easy to deploy thanks to out-of-box shell scripts. To make life easier, we create a subscription link to share with others.
 
-## VPS
+
+# 2. VPS
 
 1. Buy a VPS (LA and Debian Operating System is preferred)
    [Vultr](https://www.vultr.com/)
 
 2. Deploy server (Bitvise is recommended)
 
-## Cloudflare Warp
+# 3. Cloudflare Warp
 
-### Install
+## 3.1. Install
 
 [Cloudflare WARP Installer](https://github.com/P3TERX/warp.sh)
 
@@ -27,22 +46,22 @@ wget git.io/warp.sh
 bash warp.sh [SUBCOMMAND]
 ```
 
-### Usage
+## 3.2. Usage
 
 ```sh
 # IPv6 is preferred, because IPv4 is used by a lot of people. There is a high possibility that it is banned by some websites.
 bash warp.sh wg6
 ```
 
-## [V2ray](https://www.v2ray.com/)
+# 4. [V2ray](https://www.v2ray.com/)
 
-### Install
+## 4.1. Install
 
 ```sh
 source <(curl -sL https://multi.netlify.app/v2ray.sh) --zh
 ```
 
-### Speed Booster (not necessary)
+## 4.2. Speed Booster (not necessary)
 
 1. install
 
@@ -61,7 +80,7 @@ chmod +x tcp.sh
 bash tcp.sh 4
 ```
 
-### Usage
+## 4.3. Usage
 
 ```
 v2ray
@@ -69,7 +88,7 @@ v2ray
 4: get vmess link
 ```
 
-### Config
+## 4.4. Config
 
 location: /etc/v2ray/config.json
 
@@ -153,7 +172,76 @@ location: /etc/v2ray/config.json
 }
 ```
 
-## Note
+# 5. subscription
+
+## 5.1. create web server on VPS
+### 5.1.1. install
+```sh
+apt -y install nginx
+```
+### 5.1.2. config
+```sh
+vi /etc/nginx/nginx.conf
+```
+```nginx
+user www-data;
+worker_processes 2;
+pid /run/nginx.pid;
+ 
+error_log /var/log/nginx/error.log;
+include /usr/share/nginx/modules/*.conf;
+events {
+    worker_connections 1024;
+}
+ 
+http {
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+proxy_cache_path /etc/nginx/cache levels=1:2 keys_zone=cache_one:200m inactive=1d max_size=512m;
+    access_log  /var/log/nginx/access.log  main;
+    sendfile            on;
+    tcp_nopush          on;
+    tcp_nodelay         on;
+    keepalive_timeout   65;
+    types_hash_max_size 2048;
+    include             /etc/nginx/mime.types;
+    default_type        application/octet-stream;
+    #include /etc/nginx/conf.d/*.conf;
+    server {
+        listen       18907;  #指定端口，访问的时候需要，推荐五位端口
+        root   /usr/share/nginx/html ;
+        proxy_cache_key  $host$uri;
+        proxy_set_header  Host  $host;
+        proxy_set_header    X-real-ip $remote_addr;
+        proxy_set_header  X-Forwarded-For  $remote_addr;
+        location / {
+              root /etc/nginx/download;   # 指定实际目录绝对路径
+              autoindex on;                   # 开启目录浏览功能
+              autoindex_exact_size off;       # 关闭详细文件大小统计，让文件大小显示MB，GB单位，默认为b
+              autoindex_localtime on;         # 开启以服务器本地时区显示文件修改日期
+              charset utf-8,gbk;              # 显示中文
+              #limit_conn one 8;              # 并发数配置
+              #limit_rate 100k;               # 单线程最大下载速度kb
+       }
+    }
+}
+```
+### 5.1.3. check syntax and restart nginx
+```sh
+nginx -t && systemctl restart nginx
+```
+
+## 5.2. export config from V2ray
+![export](assets/export.png)
+Paste the config to file `sub` and put the file under `/etc/nginx/download/sub`
+
+## 5.3. subscription url
+```http
+http://<your server>:<port>/sub
+```
+
+# 6. Note
 
 1. VPS needs to restart every month
 2. warp server has to open manually after VPS restarts
