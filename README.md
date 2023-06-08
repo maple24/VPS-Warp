@@ -234,6 +234,7 @@ nginx -t && systemctl restart nginx
 
 ## 5.2. export config from V2ray
 ![export](assets/export.png)
+
 Paste the config to file `sub` and put the file under `/etc/nginx/download/sub`
 
 ## 5.3. subscription url
