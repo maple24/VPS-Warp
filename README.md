@@ -246,3 +246,4 @@ http://<your server>:<port>/sub
 
 1. VPS needs to restart every month
 2. warp server has to open manually after VPS restarts
+3. Allow firewall: `sufo ufw allow 8080`
