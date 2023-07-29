@@ -235,6 +235,7 @@ nginx -t && systemctl restart nginx
 
 ## 5.2. export config from V2ray
 ![export](assets/export.png)
+
 Paste the config to file `sub` and put the file under `/etc/nginx/download/sub`
 
 ## 5.3. subscription url
@@ -249,3 +250,4 @@ git config --global https.proxy socks5://127.0.0.1:10808
 
 1. VPS needs to restart every month
 2. warp server has to open manually after VPS restarts
+3. Allow firewall: `sufo ufw allow 8080`
