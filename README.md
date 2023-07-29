@@ -15,7 +15,8 @@
     - [5.1.3. check syntax and restart nginx](#513-check-syntax-and-restart-nginx)
   - [5.2. export config from V2ray](#52-export-config-from-v2ray)
   - [5.3. subscription url](#53-subscription-url)
-- [6. Note](#6-note)
+- [6. config github proxy](#6-config-github-proxy)
+- [7. Note](#7-note)
 # 1. Introduction
 
 [Reference](https://github.com/Alvin9999/new-pac)
@@ -240,8 +241,11 @@ Paste the config to file `sub` and put the file under `/etc/nginx/download/sub`
 ```http
 http://<your server>:<port>/sub
 ```
+# 6. config github proxy
+git config --global http.proxy socks5://127.0.0.1:10808
+git config --global https.proxy socks5://127.0.0.1:10808
 
-# 6. Note
+# 7. Note
 
 1. VPS needs to restart every month
 2. warp server has to open manually after VPS restarts
