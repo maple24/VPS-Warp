@@ -251,3 +251,5 @@ git config --global https.proxy socks5://127.0.0.1:10808
 1. VPS needs to restart every month
 2. warp server has to open manually after VPS restarts
 3. Allow firewall: `sufo ufw allow 8080`
+4. *tls domain needs to renew every month*
+![tls](assets/tls.png)
