@@ -243,8 +243,20 @@ Paste the config to file `sub` and put the file under `/etc/nginx/download/sub`
 http://<your server>:<port>/sub
 ```
 # 6. config github proxy
+```sh
 git config --global http.proxy socks5://127.0.0.1:10808
+```
+```sh
 git config --global https.proxy socks5://127.0.0.1:10808
+```
+or use http, http port = socks port + 1 by default in V2ray
+```sh
+git config --global http.proxy http://127.0.0.1:10809
+```
+```sh
+git config --global https.proxy http://127.0.0.1:10809
+```
+
 
 # 7. Note
 
