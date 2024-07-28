@@ -60,6 +60,7 @@ bash warp.sh wg6
 
 ```sh
 source <(curl -sL https://multi.netlify.app/v2ray.sh) --zh
+bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
 ```
 
 ## 4.2. Speed Booster (not necessary)
@@ -84,14 +85,18 @@ bash tcp.sh 4
 ## 4.3. Usage
 
 ```
-v2ray
-3: change v2ray settings automatically (or change it from config file)
-4: get vmess link
+systemctl status v2ray
+systemctl enable v2ray
+systemctl restart v2ray
+journalctl -u v2ray
+vim /etc/systemd/system/v2ray.service
+  Environment="V2RAY_VMESS_AEAD_FORCED=false"
 ```
 
 ## 4.4. Config
 
-location: /etc/v2ray/config.json
+server:
+location: /etc/v2ray/config.json (/usr/local/etc/v2ray/)
 
 ```json
 {
@@ -170,6 +175,55 @@ location: /etc/v2ray/config.json
       }
     ]
   }
+}
+```
+client:
+D:\v2ray\v2rayN\guiConfigs\config
+```json
+{
+  "inbounds": [
+    {
+      "port": 10808,
+      "protocol": "socks",
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls"]
+      },
+      "settings": {
+        "auth": "noauth"
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "vmess",
+      "settings": {
+        "vnext": [
+          {
+            "address": "serveraddr.com",
+            "port": "8388",
+            "users": [
+              {
+                "id": "4c4660c1-6cb9-da88-8866-d0c189ad67ec",
+                "alterId": 64
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "mkcp",
+        "kcpSettings": {
+          "uplinkCapacity": 5,
+          "downlinkCapacity": 100,
+          "congestion": true,
+          "header": {
+            "type": "none"
+          }
+        }
+      }
+    },
+  ]
 }
 ```
 
